@@ -4,7 +4,7 @@ class Dice {
 
   // 주사위 만들기
   Dice({required this.size}) {
-    for (int i = 1; i < size; i++) {
+    for (int i = 1; i <= size; i++) {
       dice.add(i);
     }
   }
