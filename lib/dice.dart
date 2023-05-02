@@ -9,6 +9,9 @@ class Dice {
     }
   }
 
+  // 다시 원래 크기로 만들기
+  void init() {}
+
   // 주사위 섞기
   void shake() {
     dice.shuffle();

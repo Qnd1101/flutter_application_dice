@@ -15,18 +15,33 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Dice dice = Dice(size: 100);
+  Dice dice = Dice(size: 10);
   late Timer timer;
-  int resultNum = 0;
+  dynamic resultNum = 0; // 랜덤으로 돌아가고 있는걸 보이게 하기 위해서
+  String resultView = ''; // 뽑은 결과를 화면에 보이게 만들기 위해서
 
   void start() {
     timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
-      dice.shake();
-      print(dice.dice[0]);
+      dice.shake(); // dice에 있는 값을 섞는다.
       setState(() {
         resultNum = dice.dice[0];
       });
     });
+  }
+
+  void pickUp() {
+    setState(() {
+      // 화면을 실시간으로 바꾸는 것 -> setState
+      resultView = '$resultView ${dice.pick()}';
+    });
+    if (dice.dice.isEmpty) {
+      timer.cancel();
+      resultNum = '끝 뿡';
+    }
+  }
+
+  void resetDice() {
+    dice.init();
   }
 
   @override
@@ -57,10 +72,10 @@ class _MyAppState extends State<MyApp> {
                   width: double.infinity,
                   height: double.infinity,
                   color: Colors.white,
-                  child: const Center(
+                  child: Center(
                     child: Text(
-                      '결과',
-                      style: TextStyle(
+                      resultView,
+                      style: const TextStyle(
                           color: Colors.black,
                           fontSize: 50,
                           fontWeight: FontWeight.bold),
@@ -83,8 +98,12 @@ class _MyAppState extends State<MyApp> {
                             icon: const Icon(Icons.play_circle)),
                         IconButton(
                             iconSize: 100,
-                            onPressed: () {},
-                            icon: const Icon(Icons.check_circle))
+                            onPressed: pickUp,
+                            icon: const Icon(Icons.check_circle)),
+                        IconButton(
+                            iconSize: 100,
+                            onPressed: resetDice,
+                            icon: const Icon(Icons.restore))
                       ],
                     ),
                   ),
