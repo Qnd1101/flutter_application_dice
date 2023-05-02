@@ -38,11 +38,11 @@ class _MyAppState extends State<MyApp> {
       setState(() {
         // 화면을 실시간으로 바꾸는 것 -> setState
         resultView = '$resultView ${dice.pick()}';
-        isStart = false;
       });
       if (dice.dice.isEmpty) {
         timer.cancel();
         setState(() {
+          isStart = false;
           resultNum = '끝 뿡';
         });
       }
