@@ -19,29 +19,46 @@ class _MyAppState extends State<MyApp> {
   late Timer timer;
   dynamic resultNum = 0; // 랜덤으로 돌아가고 있는걸 보이게 하기 위해서
   String resultView = ''; // 뽑은 결과를 화면에 보이게 만들기 위해서
+  bool isStart = false; // 돌고있는지 안돌고 있는지.
 
   void start() {
-    timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
-      dice.shake(); // dice에 있는 값을 섞는다.
-      setState(() {
-        resultNum = dice.dice[0];
+    if (!isStart) {
+      timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+        dice.shake(); // dice에 있는 값을 섞는다.
+        setState(() {
+          resultNum = dice.dice[0];
+          isStart = true;
+        });
       });
-    });
+    }
   }
 
   void pickUp() {
-    setState(() {
-      // 화면을 실시간으로 바꾸는 것 -> setState
-      resultView = '$resultView ${dice.pick()}';
-    });
-    if (dice.dice.isEmpty) {
-      timer.cancel();
-      resultNum = '끝 뿡';
+    if (dice.dice.isNotEmpty && isStart) {
+      setState(() {
+        // 화면을 실시간으로 바꾸는 것 -> setState
+        resultView = '$resultView ${dice.pick()}';
+        isStart = false;
+      });
+      if (dice.dice.isEmpty) {
+        timer.cancel();
+        setState(() {
+          resultNum = '끝 뿡';
+        });
+      }
     }
   }
 
   void resetDice() {
-    dice.init();
+    setState(() {
+      resultNum = '';
+      resultView = '';
+      dice.init();
+      if (isStart) {
+        timer.cancel();
+      }
+      isStart = false;
+    });
   }
 
   @override
