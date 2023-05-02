@@ -23,7 +23,7 @@ class _MyAppState extends State<MyApp> {
 
   void start() {
     if (!isStart) {
-      timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
         dice.shake(); // dice에 있는 값을 섞는다.
         setState(() {
           resultNum = dice.dice[0];
